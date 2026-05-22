@@ -581,6 +581,7 @@ In the local project, the dataset should be placed under:
 
 ```text
 data/real_raw/docs-sm/
+```
 
 ### Trained Model
 
@@ -592,4 +593,4 @@ After downloading, place the file under:
 
 ```text
 models/document_cnn.pt
-
+```
