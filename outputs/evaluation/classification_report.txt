@@ -1,0 +1,11 @@
+                   precision    recall  f1-score   support
+
+          invoice       0.87      0.85      0.86        46
+           letter       0.81      0.86      0.83        49
+             memo       0.70      0.79      0.75        48
+           resume       0.88      0.89      0.88        47
+scientific_report       0.82      0.66      0.73        47
+
+         accuracy                           0.81       237
+        macro avg       0.81      0.81      0.81       237
+     weighted avg       0.81      0.81      0.81       237

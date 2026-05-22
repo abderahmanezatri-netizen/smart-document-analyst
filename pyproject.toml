@@ -1,0 +1,9 @@
+[project]
+name = "smart-document-analyst"
+version = "1.0.0"
+description = "CrewAI multi-agent Smart Document Analyst with a PyTorch CNN document classifier"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,12 @@
+{
+  "test_accuracy": 0.810126582278481,
+  "classes": [
+    "invoice",
+    "letter",
+    "memo",
+    "resume",
+    "scientific_report"
+  ],
+  "num_test_samples": 237,
+  "architecture": "resnet18_transfer_learning"
+}
