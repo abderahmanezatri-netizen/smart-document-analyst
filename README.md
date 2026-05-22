@@ -594,3 +594,8 @@ After downloading, place the file under:
 ```text
 models/document_cnn.pt
 ```
+### Demo Video
+
+The demo video shows the project structure, model evaluation files, end-to-end document analysis, human-in-the-loop approval, generated report, JSON logs, and a second test on another document class.
+
+Demo video link: https://drive.google.com/file/d/10BhiPLxFm0TzibWhdLN4XZ4v8HtPiTMN/view?usp=sharing
