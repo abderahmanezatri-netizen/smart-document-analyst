@@ -569,4 +569,17 @@ And open the generated report in:
 ```text
 outputs/reports/
 ```
+## Submission Links
+
+### Dataset
+
+The dataset used in this project is based on scanned real-world document images from Kaggle.
+
+Dataset link: https://www.kaggle.com/datasets/shaz13/real-world-documents-collections
+
+In the local project, the dataset should be placed under:
+
+```text
+data/real_raw/docs-sm/
+
 
