@@ -582,4 +582,14 @@ In the local project, the dataset should be placed under:
 ```text
 data/real_raw/docs-sm/
 
+### Trained Model
+
+The trained PyTorch CNN model is too large for GitHub web upload, so it is provided through Google Drive.
+
+Model link: https://drive.google.com/file/d/1_Os89OvO8noVGviHDVc9XM4I0g0bOlMG/view?usp=sharing
+
+After downloading, place the file under:
+
+```text
+models/document_cnn.pt
 
