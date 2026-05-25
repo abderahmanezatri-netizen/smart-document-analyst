@@ -69,6 +69,7 @@ For each scanned image, the system performs the following steps:
 
 ```text
 Scanned image
+  -> CrewAI sequential multi-agent workflow
   -> CNN document classification
   -> OCR text extraction
   -> Key-field detection
@@ -84,14 +85,16 @@ The output report includes the predicted document class, confidence score, class
 
 The project uses CrewAI for the multi-agent layer and Ollama/Llama 3.1 as the local LLM backend.
 
+In normal mode, execution is handled by CrewAI sequential tasks. Each specialist agent owns and calls its assigned tools. The workflow order is controlled through CrewAI's sequential process: classification, OCR extraction, summarization, human approval, and final report generation.
+
 The agents are:
 
-- **Orchestrator Manager Agent**: coordinates the workflow and starts the analysis.
-- **Document Classification Agent**: validates the classification step and ensures the trained CNN is used.
-- **Extraction and Summarization Agent**: handles OCR extraction, simple field detection, and summarization.
-- **Report Generation Agent**: ensures the final report is generated only after human approval.
+- **Orchestrator Manager Agent**: writes the execution plan and ensures the workflow follows the required order.
+- **Document Classification Agent**: calls the `cnn_document_classifier` tool to classify the scanned image using the trained ResNet18 model.
+- **Extraction and Summarization Agent**: calls the `document_extraction_tool` for OCR and key-field extraction, then calls the `local_summarizer_tool` to summarize the real OCR text.
+- **Report Generation Agent**: calls the `human_approval_checkpoint` tool before report generation, then calls the `structured_report_writer` tool to create the final report.
 
-The final execution is handled by a controlled Python workflow. CrewAI and the LLM are used for planning and validation, while the Python workflow executes the tools in a fixed order. This avoids unreliable tool calls and keeps the demo reproducible.
+Guardrails and workflow state are used to reduce fake or hallucinated outputs from the LLM and ensure that final results come from real tool executions. A deterministic Python workflow is still available for no-LLM execution with `--no-llm`, and optional fallback can be enabled with `--fallback-manual`.
 
 ## Tools
 
@@ -126,6 +129,8 @@ models/classes.json
 ```
 
 The model receives RGB scanned document images resized to 224 x 224.
+
+The current model uses a TorchVision ResNet18 architecture with pretrained weights. The final classification layer is replaced to match the five project classes.
 
 ## Evaluation
 
@@ -201,10 +206,22 @@ Type:
 y
 ```
 
+For demo or testing without manual approval:
+
+```powershell
+python main.py analyze --document "data\real_raw\docs-sm\resume\00071736_00071737.jpg" --auto-approve
+```
+
 Fast reproducible mode without LLM:
 
 ```powershell
 python main.py analyze --document "data\real_raw\docs-sm\resume\00071736_00071737.jpg" --no-llm --auto-approve
+```
+
+Optional manual fallback if CrewAI fails:
+
+```powershell
+python main.py analyze --document "data\real_raw\docs-sm\resume\00071736_00071737.jpg" --fallback-manual --auto-approve
 ```
 
 View recent logs:
@@ -229,9 +246,11 @@ src/sda/tools/extraction_tool.py
 src/sda/tools/summarizer_tool.py
 src/sda/tools/hitl_tool.py
 src/sda/tools/report_tool.py
+src/sda/tools/workflow_state.py
 src/sda/utils/logging.py
 scripts/train_cnn.py
 scripts/evaluate_cnn.py
+models/document_cnn.pt
 models/classes.json
 outputs/evaluation/
 outputs/reports/
@@ -242,3 +261,4 @@ outputs/logs/
 
 The system currently supports scanned images only. OCR quality depends on the quality of the scan. Key-field extraction is rule-based and limited to simple patterns. The model is suitable for the project demo but is not intended as a production document understanding system.
 
+The global workflow order is defined by CrewAI sequential tasks, not freely invented by the LLM at runtime. Local LLM tool-calling may sometimes produce fake function-call text instead of executing tools; guardrails are used to reject those outputs and recover real tool results.
